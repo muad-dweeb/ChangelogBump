@@ -1,7 +1,9 @@
 # changelogbump
 
-[![Python](https://img.shields.io/badge/python3-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org)
-[![Poetry](https://img.shields.io/badge/Poetry-60A5FA?style=for-the-badge&logo=Poetry&logoColor=FFFFFF)](https://python-poetry.org/)
+[![Python](https://img.shields.io/badge/python3-555555?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org)
+[![Poetry](https://img.shields.io/badge/Poetry-555555?style=for-the-badge&logo=Poetry)](https://python-poetry.org/)
+![PyPI - Version](https://img.shields.io/pypi/v/ChangelogBump?style=for-the-badge&logo=PyPi&logoColor=EEEEEE&color=blue)
+
 
 A command-line tool that updates a project's changelog and bumps its semantic version according to [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) conventions.
 
