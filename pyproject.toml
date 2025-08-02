@@ -20,7 +20,7 @@ urls = { "Homepage" = "https://github.com/muad-dweeb/changelogbump" }
 
 [[project.authors]]
 name = "Andrew Galloway"
-email = "agalloway@blueorigin.com"
+email = "akq.galloway@gmail.com"
 
 
 [build-system]
