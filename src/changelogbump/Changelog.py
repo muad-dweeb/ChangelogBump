@@ -50,7 +50,7 @@ class Changelog:
         # Prepare a new version section
         new_entry = f"## [{new_version}] - {today}\n\n"
         if summary_text:
-            new_entry += "{summary_text}\n\n"
+            new_entry += f"{summary_text}\n\n"
         for key, value in cls.generate_sections().items():
             if len(value) > 0:
                 new_entry += f"### {key.title()}\n\n"
