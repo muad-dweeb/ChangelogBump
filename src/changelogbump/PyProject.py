@@ -6,6 +6,11 @@ import toml
 class PyProject:
     path: Path = Path("pyproject.toml")
 
+    @property
+    def current_version(self) -> str:
+        content = toml.load(self.path)
+        return content["project"]["version"]
+
     @classmethod
     def update(cls, new_version: str):
         """Set the new version in pyproject.toml."""

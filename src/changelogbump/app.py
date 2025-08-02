@@ -1,11 +1,25 @@
+"""This module defines a CLI using Click for version incrementing and
+CHANGELOG initialization. The following commands are provided:
+
+  - init: Initialize a fresh CHANGELOG.md file if one does not exist.
+  - add: Increment the project's version and update the changelog accordingly.
+
+Typical usage example:
+
+    changelogbump init
+
+The CLI commands automatically handle errors and print
+concise messages via Click exceptions.
+"""
+
 import os
 
 import click
 
-from changelogbump import header_path
-from changelogbump.Bumper import Bumper
+from changelogbump import header_path, pyproject
 from changelogbump.Changelog import Changelog
 from changelogbump.PyProject import PyProject
+from changelogbump.Version import Version
 
 
 class OrderCommands(click.Group):
@@ -15,6 +29,7 @@ class OrderCommands(click.Group):
 
 @click.group(cls=OrderCommands)
 def cli():
+    """Click-based CLI for application version incrementing and CHANGELOG management."""
     pass
 
 
@@ -44,12 +59,13 @@ def add(major, minor, patch, summary):
     if not any([major, minor, patch]):
         raise click.ClickException("Specify one of --major, --minor, or --patch.")
 
-    bumper = Bumper()
-    new_version = bumper.bump(major, minor, patch)
-    print(f"Current version: {bumper.current}")
-    print(f"Incrementing to: {new_version}")
-    Changelog.update(new_version, summary)
-    PyProject.update(new_version)
+    maj_str, min_str, pat_str = pyproject.current_version.split(".")
+    version = Version(int(maj_str), int(min_str), int(pat_str))
+    print(f"Current version: {version.current}")
+    version.bump(major, minor, patch)
+    print(f"Incrementing to: {version.current}")
+    Changelog.update(version.current, summary)
+    PyProject.update(version.current)
 
 
 if __name__ == "__main__":
