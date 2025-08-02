@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "A CLI tool to manage project versioning and changelogs with Keep a Changelog compliance."
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = [ "click (>=8.2.1,<9.0.0)", "toml (>=0.10.2,<0.11.0)",]
+dependencies = [ "click (>=8.2.1,<9.0.0)", "toml (>=0.10.2,<0.11.0)"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -22,10 +22,12 @@ urls = { "Homepage" = "https://github.com/muad-dweeb/changelogbump" }
 name = "Andrew Galloway"
 email = "akq.galloway@gmail.com"
 
-
 [build-system]
 requires = [ "poetry-core>=2.0.0,<3.0.0",]
 build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.report]
+show_missing = true
 
 [tool.poetry]
 version = "0.2.0"
@@ -39,3 +41,5 @@ changelogbump = "changelogbump.app:cli"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.12.7"
+pytest = "^8.4.1"
+pytest-cov = "^6.2.1"
