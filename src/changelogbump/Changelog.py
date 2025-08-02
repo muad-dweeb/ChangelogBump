@@ -1,3 +1,9 @@
+"""Handles reading, writing, and updating the project's changelog.
+
+This module provides the Changelog class for user input prompts and version
+entries in the project's CHANGELOG.md file.
+"""
+
 from datetime import date
 from pathlib import Path
 
@@ -5,10 +11,18 @@ import click
 
 
 class Changelog:
+    """Manages updates to the project's CHANGELOG.md file."""
+
     path: Path = Path("CHANGELOG.md")
 
     @staticmethod
     def generate_sections() -> dict[str, list[str]]:
+        """Prompt the user for 'added', 'changed', and 'removed' changelog items.
+
+        Returns:
+            dict[str, list[str]]: A dictionary mapping each section ("added",
+            "changed", "removed") to a list of user-provided entries.
+        """
         result: dict[str, list[str]] = {"added": [], "changed": [], "removed": []}
         for key in result.keys():
             while True:
@@ -23,6 +37,13 @@ class Changelog:
 
     @classmethod
     def update(cls, new_version: str, summary_text: str | None = None):
+        """Append a new version section to the project's changelog.
+
+        Args:
+            new_version (str): The new version string to include in the changelog.
+            summary_text (str | None, optional): A summary or heading to place
+                under the version entry. Defaults to None.
+        """
         content = cls.path.read_text()
         today = date.today().strftime("%Y-%m-%d")
 
