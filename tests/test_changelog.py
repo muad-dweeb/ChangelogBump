@@ -9,7 +9,17 @@ class TestChangelog:
         """
         # Simulate user inputs; each call to click.prompt returns the next item in this list,
         # then stops for each section after an empty response.
-        user_inputs = iter(["First added entry", "Second added entry", "", "Changed item", "", "Removed item", ""])
+        user_inputs = iter(
+            [
+                "First added entry",
+                "Second added entry",
+                "",
+                "Changed item",
+                "",
+                "Removed item",
+                "",
+            ]
+        )
 
         def mock_prompt(*args, **kwargs):
             return next(user_inputs)
@@ -17,7 +27,10 @@ class TestChangelog:
         monkeypatch.setattr("click.prompt", mock_prompt)
 
         result = Changelog.generate_sections()
-        assert "added" in result and result["added"] == ["First added entry", "Second added entry"]
+        assert "added" in result and result["added"] == [
+            "First added entry",
+            "Second added entry",
+        ]
         assert "changed" in result and result["changed"] == ["Changed item"]
         assert "removed" in result and result["removed"] == ["Removed item"]
 
@@ -27,8 +40,11 @@ class TestChangelog:
         and writes the modified changelog back to file.
         """
         # Mock out the generate_sections method to control its output.
-        monkeypatch.setattr(Changelog, "generate_sections",
-                            lambda: {"added": ["Mocked entry"], "changed": [], "removed": []})
+        monkeypatch.setattr(
+            Changelog,
+            "generate_sections",
+            lambda: {"added": ["Mocked entry"], "changed": [], "removed": []},
+        )
 
         # Create a simulated file content and assign path to tmp_path for testing file operations.
         original_content = """# Changelog
@@ -59,8 +75,11 @@ Some existing changelog text
         Check that update() appends a new version entry if no existing version headings are present.
         """
         # Mock generate_sections again
-        monkeypatch.setattr(Changelog, "generate_sections",
-                            lambda: {"added": ["Mocked add"], "changed": [], "removed": []})
+        monkeypatch.setattr(
+            Changelog,
+            "generate_sections",
+            lambda: {"added": ["Mocked add"], "changed": [], "removed": []},
+        )
 
         # Original file has no version headings
         original_content = "# Changelog\n\nSome text but no version headings\n"

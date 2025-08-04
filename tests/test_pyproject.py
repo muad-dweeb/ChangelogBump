@@ -35,7 +35,7 @@ version = "0.1.0"
 
         # Use the Version class to specify a new version
         new_version = Version(major=1, minor=2, patch=3)
-        PyProject.update(new_version)
+        PyProject.update(new_version.current)
 
         # Reload file to check that version changed
         data = toml.load(mock_file)

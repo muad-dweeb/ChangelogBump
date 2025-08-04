@@ -1,6 +1,7 @@
 import pytest
 from changelogbump.Version import Version
 
+
 class TestVersion:
     @pytest.fixture
     def version(self):

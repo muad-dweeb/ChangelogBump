@@ -8,8 +8,6 @@ from pathlib import Path
 
 import toml
 
-from changelogbump.Version import Version
-
 
 class PyProject:
     """Manages interactions with the project's pyproject.toml."""
@@ -23,18 +21,23 @@ class PyProject:
         Returns:
             str: The version string as specified in pyproject.toml.
         """
-
+        if not self.path.exists():
+            raise FileNotFoundError(f"Missing file: {self.path}")
         content = toml.load(self.path)
         return content["project"]["version"]
 
     @classmethod
-    def update(cls, new_version: Version):
+    def update(cls, new_version: str):
         """Set the new version in pyproject.toml.
 
         Args:
-            new_version (Version): The new version to write into the file.
+            new_version (str): Updated sem-ver string to dump into pyproject.toml.
         """
-        data = toml.load(cls.path)
-        data["project"]["version"] = new_version.current
+        try:
+            p = str(cls.path)
+            data = toml.load(p)
+        except Exception as e:
+            raise TypeError(f"WTF: {e}")
+        data["project"]["version"] = new_version
         with cls.path.open("w") as fh:
             toml.dump(data, fh)  # type: ignore
