@@ -1,16 +1,33 @@
 import os
+import subprocess
+import sys
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
 from click.testing import CliRunner
 
+import changelogbump
 import src.changelogbump.PyProject
 from changelogbump import pyproject
 from changelogbump.Changelog import Changelog
-from changelogbump.app import cli
+from changelogbump.app import cli, OrderCommands
 
 
 class TestApp:
+    def test_order_commands_list_commands(self):
+        """
+        Ensure OrderCommands.list_commands() returns the command names in the order declared.
+        """
+
+        order_group = OrderCommands()
+        # Collect subcommands from cli
+        for name, cmd in cli.commands.items():
+            order_group.add_command(cmd, name)
+
+        commands_list = order_group.list_commands(...)
+        assert commands_list == ["init", "add"]
+
     def test_init_creates_changelog_if_missing(self, tmp_path, monkeypatch):
         """Verify that 'init' creates a new CHANGELOG.md if none exists."""
         runner = CliRunner()
@@ -97,3 +114,11 @@ class TestApp:
 
         # Validate the updated pyproject version
         assert pyproject.current_version == expected
+
+    def test_main_subprocess(self):
+        """Launch the script as if run from the command line"""
+        script: Path = changelogbump.src / "changelogbump/app.py"
+        result = subprocess.run(
+            [sys.executable, script, "--help"], capture_output=True, text=True
+        )
+        assert "Click-based CLI for application version incrementing" in result.stdout

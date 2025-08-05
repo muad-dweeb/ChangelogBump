@@ -33,11 +33,8 @@ class PyProject:
         Args:
             new_version (str): Updated sem-ver string to dump into pyproject.toml.
         """
-        try:
-            p = str(cls.path)
-            data = toml.load(p)
-        except Exception as e:
-            raise TypeError(f"WTF: {e}")
+        p = str(cls.path)
+        data = toml.load(p)
         data["project"]["version"] = new_version
         with cls.path.open("w") as fh:
             toml.dump(data, fh)  # type: ignore

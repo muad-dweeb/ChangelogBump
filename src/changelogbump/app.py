@@ -15,6 +15,7 @@ concise messages via Click exceptions.
 import os
 
 import click
+from click import Command
 
 from changelogbump import header_path, pyproject
 from changelogbump.Changelog import Changelog
@@ -28,7 +29,7 @@ class OrderCommands(click.Group):
 
 
 @click.group(cls=OrderCommands)
-def cli():
+def cli() -> Command:
     """Click-based CLI for application version incrementing and CHANGELOG management."""
     pass
 
