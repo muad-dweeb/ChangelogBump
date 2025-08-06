@@ -1,0 +1,28 @@
+name: "Shared Python Setup"
+
+on:
+  workflow_call:
+    inputs:
+      run-command:
+        type: string
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Install project dependencies
+        run: poetry install
+
+      - name: Run Command
+        run: ${{ inputs.run-command }}

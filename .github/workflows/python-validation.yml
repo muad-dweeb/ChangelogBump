@@ -1,0 +1,23 @@
+name: Python Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ruff:
+    uses: ./.github/workflows/python-shared-setup.yml
+    with:
+      run-command: |
+        poetry run ruff check .
+        poetry run ruff format --check .
+
+  pytest:
+    uses: ./.github/workflows/python-shared-setup.yml
+    with:
+      run-command: |
+        poetry run pytest
