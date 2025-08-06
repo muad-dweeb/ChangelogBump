@@ -1,15 +1,14 @@
-name: Ruff Lint and Format Validation
+name: "Shared Python Setup"
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      run-command:
+        type: string
+        required: true
 
 jobs:
-  ruff:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install Poetry
         run: pip install poetry
@@ -25,8 +24,5 @@ jobs:
       - name: Install project dependencies
         run: poetry install --no-root
 
-      - name: Run Ruff Check
-        run: poetry run ruff check .
-
-      - name: Run Ruff Format Check
-        run: poetry run ruff format --check .
+      - name: Run Command
+        run: ${{ inputs.run-command }}

@@ -1,0 +1,23 @@
+name: Ruff Lint and Format Validation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ruff:
+    uses: ./.github/workflows/shared-python-setup.yml
+    with:
+      run-command: |
+        poetry run ruff check .
+        poetry run ruff format --check .
+
+  pytest:
+    uses: ./.github/workflows/shared-python-setup.yml
+    with:
+      run-command: |
+        poetry run pytest
