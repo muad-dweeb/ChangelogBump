@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.2] - 2025-08-05
 
-Bug Fix: Static File Path Discrepency
+Bug Fix: Static File Path Discrepancy
 
 ### Added
 
