@@ -1,4 +1,4 @@
-name: Ruff Lint and Format Validation
+name: Python Validation
 
 on:
   push:
