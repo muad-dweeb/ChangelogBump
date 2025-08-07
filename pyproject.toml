@@ -1,6 +1,6 @@
 [project]
 name = "changelogbump"
-version = "0.1.2"
+version = "0.2.0"
 description = "A CLI tool to manage project versioning and changelogs with Keep a Changelog compliance."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -25,21 +25,17 @@ version = "0.2.0"
 include = "changelogbump"
 from = "src"
 
+[tool.poetry.scripts]
+changelogbump = "changelogbump.app:cli"
+
 [tool.coverage.report]
 show_missing = true
 
-[tool.poetry.scripts]
-changelogbump = "changelogbump.app:cli"
+[tool.pytest.ini_options]
+testpaths = [ "tests",]
+addopts = [ "--cov=src/changelogbump",]
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.12.7"
 pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
-
-[tool.pytest.ini_options]
-testpaths = [
-    "tests"
-]
-addopts = [
-    "--cov=src/changelogbump"
-]
