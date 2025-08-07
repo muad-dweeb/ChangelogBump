@@ -72,12 +72,12 @@ def add(major, minor, patch, summary):
         raise click.ClickException("Specify one of --major, --minor, or --patch.")
 
     maj_str, min_str, pat_str = pyproject.current_version.split(".")
-    version = Version(int(maj_str), int(min_str), int(pat_str))
-    print(f"Current version: {version.current}")
-    version.bump(major, minor, patch)
-    print(f"Incrementing to: {version.current}")
-    Changelog.update(version.current, summary)
-    PyProject.update(version.current)
+    _version = Version(int(maj_str), int(min_str), int(pat_str))
+    print(f"Current version: {_version.current}")
+    _version.bump(major, minor, patch)
+    print(f"Incrementing to: {_version.current}")
+    Changelog.update(_version.current, summary)
+    PyProject.update(_version.current)
 
 
 if __name__ == "__main__":
