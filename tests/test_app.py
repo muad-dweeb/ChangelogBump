@@ -26,7 +26,14 @@ class TestApp:
             order_group.add_command(cmd, name)
 
         commands_list = order_group.list_commands(...)
-        assert commands_list == ["init", "add"]
+        assert commands_list == ["version", "init", "add"]
+
+    def test_version_command(self):
+        """Ensure the 'version' command displays a package version."""
+        runner = CliRunner()
+        result = runner.invoke(cli, ["version"])
+        assert result.exit_code == 0
+        assert "Installed: " in result.output
 
     def test_init_creates_changelog_if_missing(self, tmp_path, monkeypatch):
         """Verify that 'init' creates a new CHANGELOG.md if none exists."""

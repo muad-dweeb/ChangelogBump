@@ -19,6 +19,7 @@ from click import Command
 
 from changelogbump import header_path, pyproject
 from changelogbump.Changelog import Changelog
+from changelogbump.Metadata import _PyPiMetadata
 from changelogbump.PyProject import PyProject
 from changelogbump.Version import Version
 
@@ -32,6 +33,16 @@ class OrderCommands(click.Group):
 def cli() -> Command:
     """Click-based CLI for application version incrementing and CHANGELOG management."""
     pass
+
+
+@cli.command()
+def version():
+    """Display the current changelogbump version"""
+    import importlib.metadata
+
+    pkg_version: str = importlib.metadata.version("changelogbump")
+    click.echo(f"Installed: {pkg_version}")
+    click.echo(f"Available: {_PyPiMetadata.version()}")
 
 
 @cli.command()
