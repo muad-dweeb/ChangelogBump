@@ -15,6 +15,10 @@ A command-line tool that updates a project's changelog and bumps its semantic ve
   - The changelog, prompting for added, changed, or removed entries.
 - Helps maintain strict adherence to semantic versioning.
 
+## Requirements
+
+- pyproject.toml
+
 ## Installation
 
 1. Ensure you have Python 3.11 or newer installed.
@@ -42,6 +46,11 @@ From your terminal, run:
 - Provide a summary for the version:
   ```bash
   changelogbump add --patch --summary "Small bug fixes"
+  ```
+
+- Check the currently installed version of changelogbump:
+  ```bash
+  changelogbump version
   ```
 
 You will be prompted for items to add under different sections (Added, Changed, Removed), which are appended to the changelog.

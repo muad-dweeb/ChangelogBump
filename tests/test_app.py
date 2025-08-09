@@ -35,6 +35,33 @@ class TestApp:
         assert result.exit_code == 0
         assert "Installed: " in result.output
 
+    @pytest.mark.parametrize(
+        "local_version, remote_version",
+        [
+            ("1.2.3", "1.2.3"),  # same version
+            ("1.2.3", "2.0.0"),  # newer version available
+        ],
+    )
+    def test_version_command_coverage(self, monkeypatch, local_version, remote_version):
+        """Parametrized test for the 'version' command to cover both matching and newer versions."""
+
+        def mock_local_version(_: str) -> str:
+            return local_version
+
+        def mock_remote_version() -> str:
+            return remote_version
+
+        monkeypatch.setattr("importlib.metadata.version", mock_local_version)
+        monkeypatch.setattr(
+            "changelogbump.Metadata._PyPiMetadata.version", mock_remote_version
+        )
+
+        runner = CliRunner()
+        result = runner.invoke(cli, ["version"])
+        assert result.exit_code == 0
+        assert f"Installed: {local_version}" in result.output
+        assert f"Available: {remote_version}" in result.output
+
     def test_init_creates_changelog_if_missing(self, tmp_path, monkeypatch):
         """Verify that 'init' creates a new CHANGELOG.md if none exists."""
         runner = CliRunner()

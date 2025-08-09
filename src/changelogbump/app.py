@@ -40,19 +40,33 @@ def version():
     """Display the current changelogbump version"""
     import importlib.metadata
 
-    pkg_version: str = importlib.metadata.version("changelogbump")
-    click.echo(f"Installed: {pkg_version}")
-    click.echo(f"Available: {_PyPiMetadata.version()}")
+    pkg_version = Version.from_string(importlib.metadata.version("changelogbump"))
+    remote_version = Version.from_string(_PyPiMetadata.version())
+    kwargs_a: dict = {"bold": True}
+    kwargs_b: dict = {}
+    if remote_version == pkg_version:
+        kwargs_a["fg"] = "green"
+    if remote_version.is_greater_than(pkg_version):
+        kwargs_b["fg"] = "red"
+    click.echo(click.style(f"Installed: {pkg_version}", **kwargs_a))
+    click.echo(click.style(f"Available: {remote_version}", **kwargs_b))
 
 
 @cli.command()
 def init():
     """Initialize a fresh CHANGELOG.md in the project root."""
     if os.path.isfile(Changelog.path):
-        raise click.ClickException(f"{Changelog.path} already exists. Aborting.")
+        raise click.ClickException(
+            click.style(f"{Changelog.path} already exists. ", fg="red")
+            + click.style("Aborting.", fg="red", bold=True)
+        )
     with open(Changelog.path, "w") as changelog:
         with open(header_path, "r") as header:
             changelog.write(header.read())
+    click.echo(
+        click.style("Changelog initialized: ", fg="green", bold=True)
+        + str(Changelog.path.absolute())
+    )
 
 
 @cli.command()
@@ -66,16 +80,19 @@ def add(major, minor, patch, summary):
     """Increment version by one of the semantic parts (major|minor|patch)."""
     if sum([major, minor, patch]) > 1:
         raise click.ClickException(
-            "Only one of --major, --minor, or --patch is allowed."
+            click.style(
+                "Only one of --major, --minor, or --patch is allowed.", fg="red"
+            )
         )
     if not any([major, minor, patch]):
-        raise click.ClickException("Specify one of --major, --minor, or --patch.")
+        raise click.ClickException(
+            click.style("Specify one of --major, --minor, or --patch.", fg="red")
+        )
 
-    maj_str, min_str, pat_str = pyproject.current_version.split(".")
-    _version = Version(int(maj_str), int(min_str), int(pat_str))
-    print(f"Current version: {_version.current}")
+    _version = Version.from_string(pyproject.current_version)
+    click.echo("Current version: " + click.style(_version.current, fg="bright_black"))
     _version.bump(major, minor, patch)
-    print(f"Incrementing to: {_version.current}")
+    click.echo("Incrementing to: " + click.style(_version.current, fg="blue"))
     Changelog.update(_version.current, summary)
     PyProject.update(_version.current)
 

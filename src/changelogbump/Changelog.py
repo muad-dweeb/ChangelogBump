@@ -27,8 +27,10 @@ class Changelog:
         for key in result.keys():
             while True:
                 resp: str = click.prompt(
-                    f"{key.title()}: (empty moves to next section)",
+                    click.style(f"{key.title()}: ", bold=True)
+                    + click.style("empty moves to next section", fg="bright_black"),
                     default="",
+                    show_default=False,
                 )
                 if not resp or resp.strip() == "":
                     break
