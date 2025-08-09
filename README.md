@@ -44,6 +44,11 @@ From your terminal, run:
   changelogbump add --patch --summary "Small bug fixes"
   ```
 
+- Check the currently installed version of changelogbump:
+  ```bash
+  changelogbump version
+  ```
+
 You will be prompted for items to add under different sections (Added, Changed, Removed), which are appended to the changelog.
 
 ## Contributing
