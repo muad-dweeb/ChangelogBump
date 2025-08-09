@@ -34,3 +34,38 @@ class TestVersion:
         """
         with pytest.raises(AttributeError):
             version.bump()
+
+    @pytest.mark.parametrize(
+        "v1, v2, expected",
+        [
+            (Version(1, 0, 0), Version(2, 0, 0), False),
+            (Version(2, 0, 0), Version(1, 9, 9), True),
+            (Version(1, 2, 3), Version(1, 3, 2), False),
+            (Version(1, 3, 4), Version(1, 2, 3), True),
+            (Version(1, 2, 4), Version(1, 2, 5), False),
+            (Version(1, 2, 4), Version(1, 2, 3), True),
+            (Version(1, 2, 3), Version(1, 2, 3), False),
+        ],
+    )
+    def test_is_greater_than(self, v1, v2, expected):
+        """
+        Ensure is_greater_than correctly determines if v1 is greater than v2.
+        """
+        assert v1.is_greater_than(v2) == expected
+
+    @pytest.mark.parametrize(
+        "version_str, major, minor, patch",
+        [
+            ("1.2.3", 1, 2, 3),
+            ("10.0.1", 10, 0, 1),
+            ("0.0.0", 0, 0, 0),
+        ],
+    )
+    def test_from_string(self, version_str, major, minor, patch):
+        """
+        Ensure from_string() properly parses the string into a Version object.
+        """
+        v = Version.from_string(version_str)
+        assert v.major == major
+        assert v.minor == minor
+        assert v.patch == patch
