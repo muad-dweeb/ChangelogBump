@@ -52,7 +52,9 @@ class TestApp:
             return remote_version
 
         monkeypatch.setattr("importlib.metadata.version", mock_local_version)
-        monkeypatch.setattr("changelogbump.Metadata._PyPiMetadata.version", mock_remote_version)
+        monkeypatch.setattr(
+            "changelogbump.Metadata._PyPiMetadata.version", mock_remote_version
+        )
 
         runner = CliRunner()
         result = runner.invoke(cli, ["version"])
