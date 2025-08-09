@@ -63,6 +63,10 @@ def init():
     with open(Changelog.path, "w") as changelog:
         with open(header_path, "r") as header:
             changelog.write(header.read())
+    click.echo(
+        click.style("Changelog initialized: ", fg="green", bold=True)
+        + str(Changelog.path.absolute())
+    )
 
 
 @cli.command()
