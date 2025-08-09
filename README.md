@@ -15,6 +15,10 @@ A command-line tool that updates a project's changelog and bumps its semantic ve
   - The changelog, prompting for added, changed, or removed entries.
 - Helps maintain strict adherence to semantic versioning.
 
+## Requirements
+
+- pyproject.toml
+
 ## Installation
 
 1. Ensure you have Python 3.11 or newer installed.
