@@ -149,6 +149,37 @@ class TestApp:
         # Validate the updated pyproject version
         assert pyproject.current_version == expected
 
+    def test_inspect_command_success(self, monkeypatch):
+        """
+        Ensure 'inspect' command calls inspect_project and handles success.
+        """
+        called = {}
+
+        def fake_inspect():
+            called["ran"] = True
+
+        monkeypatch.setattr("changelogbump.app.inspect_project", fake_inspect)
+
+        runner = CliRunner()
+        result = runner.invoke(cli, ["inspect"])
+        assert result.exit_code == 0
+        assert called.get("ran")
+
+    def test_inspect_command_failure(self, monkeypatch):
+        """
+        Ensure 'inspect' command catches exception and displays error.
+        """
+
+        def fake_inspect():
+            raise RuntimeError("something went wrong")
+
+        monkeypatch.setattr("changelogbump.app.inspect_project", fake_inspect)
+
+        runner = CliRunner()
+        result = runner.invoke(cli, ["inspect"])
+        assert result.exit_code != 0
+        assert "something went wrong" in result.output
+
     def test_main_subprocess(self):
         """Launch the script as if run from the command line"""
         script: Path = changelogbump.src / "changelogbump/app.py"
