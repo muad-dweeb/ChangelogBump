@@ -13,6 +13,7 @@ concise messages via Click exceptions.
 """
 
 import os
+from pathlib import Path
 
 import click
 from click import Command
@@ -95,6 +96,75 @@ def add(major, minor, patch, summary):
     click.echo("Incrementing to: " + click.style(_version.current, fg="blue"))
     Changelog.update(_version.current, summary)
     PyProject.update(_version.current)
+
+
+@cli.command()
+def inspect():
+    """Inspect project version consistency and display basic details."""
+    errors = []
+    warnings = []
+    pyproject_version = None
+
+    # Check if pyproject.toml exists
+    if not PyProject.path.exists():
+        errors.append(f"Missing {PyProject.path}")
+    else:
+        try:
+            pyproject_instance = PyProject()
+            pyproject_version = pyproject_instance.current_version
+            click.echo(
+                "Project version: "
+                + click.style(pyproject_version, fg="blue", bold=True)
+            )
+        except Exception as e:
+            errors.append(f"Error reading pyproject.toml: {str(e)}")
+            pyproject_version = None
+
+    # Check if CHANGELOG.md exists
+    if not Changelog.path.exists():
+        warnings.append(f"Missing {Changelog.path}")
+        changelog_version = None
+    else:
+        changelog_version = Changelog.get_latest_version()
+        if changelog_version:
+            click.echo(
+                "Latest changelog version: "
+                + click.style(changelog_version, fg="green", bold=True)
+            )
+        else:
+            warnings.append("No version entries found in changelog")
+
+    # Check version consistency
+    if pyproject_version and changelog_version:
+        if pyproject_version != changelog_version:
+            errors.append(
+                f"Version mismatch: pyproject.toml ({pyproject_version}) != CHANGELOG.md ({changelog_version})"
+            )
+        else:
+            click.echo(click.style("✓ Versions are consistent", fg="green"))
+
+    # Display project path
+    click.echo(
+        f"Project path: {click.style(str(Path.cwd().absolute()), fg='bright_black')}"
+    )
+
+    # Display warnings
+    if warnings:
+        click.echo()
+        click.echo(click.style("Warnings:", fg="yellow", bold=True))
+        for warning in warnings:
+            click.echo(click.style(f"  ⚠ {warning}", fg="yellow"))
+
+    # Display errors and exit if any
+    if errors:
+        click.echo()
+        click.echo(click.style("Errors:", fg="red", bold=True))
+        for error in errors:
+            click.echo(click.style(f"  ✗ {error}", fg="red"))
+        raise click.ClickException("Project inspection failed due to errors above.")
+
+    if not errors and not warnings:
+        click.echo(click.style("✓ Project inspection passed", fg="green", bold=True))
 
 
 if __name__ == "__main__":

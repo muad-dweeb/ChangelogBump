@@ -15,6 +15,28 @@ class Changelog:
 
     path: Path = Path("CHANGELOG.md")
 
+    @classmethod
+    def get_latest_version(cls) -> str | None:
+        """Extract the latest version from the changelog.
+
+        Returns:
+            str | None: The latest version string from the changelog, or None if not found.
+        """
+        if not cls.path.exists():
+            return None
+
+        content = cls.path.read_text()
+        lines = content.splitlines()
+
+        for line in lines:
+            if line.startswith("## [") and "]" in line:
+                # Extract version from format "## [1.2.3] - YYYY-MM-DD"
+                start = line.find("[") + 1
+                end = line.find("]")
+                if 0 < start < end:
+                    return line[start:end]
+        return None
+
     @staticmethod
     def generate_sections() -> dict[str, list[str]]:
         """Prompt the user for 'added', 'changed', and 'removed' changelog items.
