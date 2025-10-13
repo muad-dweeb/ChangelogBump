@@ -26,7 +26,7 @@ class TestApp:
             order_group.add_command(cmd, name)
 
         commands_list = order_group.list_commands(...)
-        assert commands_list == ["version", "init", "add"]
+        assert commands_list == ["version", "init", "add", "inspect"]
 
     def test_version_command(self):
         """Ensure the 'version' command displays a package version."""
