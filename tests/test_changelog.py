@@ -2,6 +2,26 @@ from changelogbump.Changelog import Changelog
 
 
 class TestChangelog:
+    def test_get_latest_version_no_exist(self, tmp_path, monkeypatch):
+        changelog_file = tmp_path / "CHANGELOG.md"
+        monkeypatch.setattr(Changelog, "path", changelog_file)
+        assert Changelog.get_latest_version() is None
+
+    def test_get_latest_version_no_lines(self, tmp_path, monkeypatch):
+        changelog_file = tmp_path / "CHANGELOG.md"
+        changelog_file.write_text("# Changelog")
+        monkeypatch.setattr(Changelog, "path", changelog_file)
+        assert Changelog.get_latest_version() is None
+
+    def test_get_latest_version_finds_heading(self, tmp_path, monkeypatch):
+        """
+        Should extract the version string when a line starts with '## [' and contains ']'.
+        """
+        changelog_file = tmp_path / "CHANGELOG.md"
+        changelog_file.write_text("# Changelog\n\n## [2.3.4] - 2024-06-04\n- Entry\n")
+        monkeypatch.setattr(Changelog, "path", changelog_file)
+        assert Changelog.get_latest_version() == "2.3.4"
+
     def test_generate_sections(self, monkeypatch):
         """
         Ensure generate_sections() collects user input until empty entries

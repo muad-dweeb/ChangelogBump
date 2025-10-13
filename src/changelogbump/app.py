@@ -22,6 +22,7 @@ from changelogbump.Changelog import Changelog
 from changelogbump.Metadata import _PyPiMetadata
 from changelogbump.PyProject import PyProject
 from changelogbump.Version import Version
+from changelogbump.util import inspect_project
 
 
 class OrderCommands(click.Group):
@@ -95,6 +96,15 @@ def add(major, minor, patch, summary):
     click.echo("Incrementing to: " + click.style(_version.current, fg="blue"))
     Changelog.update(_version.current, summary)
     PyProject.update(_version.current)
+
+
+@cli.command()
+def inspect():
+    """Inspect project version consistency and display basic details."""
+    try:
+        inspect_project()
+    except Exception as e:
+        raise click.ClickException(str(e))
 
 
 if __name__ == "__main__":
